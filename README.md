@@ -4,3 +4,4 @@ current conditions and lights an LED on a physical display. You will need a vali
 open weather map. 
 
 Info on setting up the angular servo found here: https://gpiozero.readthedocs.io/en/stable/
+To install PYOWM: https://github.com/csparpa/pyowm
