@@ -1,0 +1,57 @@
+from gpiozero import AngularServo, LED
+import pyowm
+from time import sleep
+
+red = LED(9)
+blue = LED(10)
+white = LED(14)
+yellow = LED(15)
+
+owm = pyowm.OWM('Your_Key_Here')
+servo = AngularServo(4, min_angle=-44, max_angle=44)
+
+while True:
+    
+    observation = owm.weather_at_place('Houston,US') #substitute your city and two letter country code
+    w = observation.get_weather()
+    s = w.get_detailed_status()
+    #next 4 lines only for testing & commented out in the final version
+    t = w.get_temperature('fahrenheit')['temp']
+    h = w.get_humidity()
+    wind = w.get_wind('miles_hour')['speed']
+    wind = round(wind)
+    if 'thunderstorm' in s:
+        servo.angle = 40
+        red.on()
+        blue.off()
+        white.off()
+        yellow.off()
+    elif 'clear' in s:
+        servo.angle = -40
+        red.off()
+        blue.off()
+        white.off()
+        yellow.on()
+    
+    elif 'clouds' in s:
+        servo.angle = -15
+        red.off()
+        blue.off()
+        white.on()
+        yellow.off()
+    elif 'rain' or 'snow' in s:
+        servo.angle = 15
+        red.off()
+        blue.on()
+        white.off()
+        yellow.off()
+    
+    #these print statements included for testing & are commented out in the run on boot final project
+    
+    print("Temp: " + (str(t)) + "F")
+    print("Wind speed: " + (str(wind)) + "mph")
+    print("Humidity: " + (str(h)) + "%")
+    print(s)
+    print(" ")
+    sleep(600)
+    
